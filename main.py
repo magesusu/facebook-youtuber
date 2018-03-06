@@ -1,11 +1,12 @@
+#youtube-dl
+from __future__ import unicode_literals
+import youtube_dl
+
 import requests
 import json
 import csv
 import configparser
 
-#youtube-dl
-#from __future__ import unicode_literals
-#import youtube_dl
 #youtube-upload
 
 CONFIG_LOCATION = "/home/ssr990/.config/facebook-youtuber/"
