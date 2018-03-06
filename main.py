@@ -11,6 +11,7 @@ import configparser
 
 CONFIG_LOCATION = "/home/ssr990/.config/facebook-youtuber/"
 UPLOADED_LIST_LOCATION = CONFIG_LOCATION + "UploadedVideoId.csv"
+LOCAL_VIDEO_LOCATION = "/home/ssr990/videos"
 
 config = configparser.ConfigParser()
 config.read(CONFIG_LOCATION + 'config.ini', 'UTF-8')
@@ -42,11 +43,13 @@ with open(UPLOADED_LIST_LOCATION) as f:
 
 with open(UPLOADED_LIST_LOCATION,'a') as f:
     for id in cue:
-        #TODO: Download the video
-        ydl_opts = {}
+        #Download the video
+        title = ""
+        ydl_opts = {'outtmpl': LOCAL_VIDEO_LOCATION + "/" + id + ".mp4",}
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            meta = ydl.extract_info(['https://www.facebook.com/' + USER_ID + '/videos/' + id], download = False)
+            meta = ydl.extract_info('https://www.facebook.com/' + USER_ID + '/videos/' + id)
+
 
         #TODO: Upload the video
         #f.write(id + "\n")
-        print("USO uploaded: "+ id)
+        print("USO uploaded: "+ meta['title'] + "|" + id)
