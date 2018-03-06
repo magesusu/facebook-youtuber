@@ -1,13 +1,15 @@
-#youtube-dl
 from __future__ import unicode_literals
-import youtube_dl
 
+import youtube_dl
+import youtube_upload.main as yup
+
+import pytz
+from datetime import datetime, timezone
 import requests
 import json
 import csv
 import configparser
-
-#youtube-upload
+import optparse
 
 CONFIG_LOCATION = "/home/ssr990/.config/facebook-youtuber/"
 UPLOADED_LIST_LOCATION = CONFIG_LOCATION + "UploadedVideoId.csv"
@@ -43,13 +45,16 @@ with open(UPLOADED_LIST_LOCATION) as f:
 
 with open(UPLOADED_LIST_LOCATION,'a') as f:
     for id in cue:
-        #Download the video
+        # Download the video
         title = ""
-        ydl_opts = {'outtmpl': LOCAL_VIDEO_LOCATION + "/" + id + ".mp4",}
+        savepath = LOCAL_VIDEO_LOCATION + "/" + id + ".mp4"
+        dl = 'https://www.facebook.com/' + USER_ID + '/videos/' + id
+        ydl_opts = {'outtmpl': savepath,}
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            meta = ydl.extract_info('https://www.facebook.com/' + USER_ID + '/videos/' + id)
+            meta = ydl.extract_info(dl)
 
-
-        #TODO: Upload the video
-        #f.write(id + "\n")
-        print("USO uploaded: "+ meta['title'] + "|" + id)
+        # Upload the video
+        yup_opts = ['--title', meta['title'], '--recording-date', datetime.fromtimestamp(meta['timestamp'], timezone.utc).isoformat(timespec='microseconds'), '--description', 'This video is a reproduction of our Facebook video.\nOriginal URL: ' + dl, savepath]
+        url = yup.main(yup_opts)
+        f.write(id + "\n")
+        print("Uploaded: ["+ id +"]" + meta['title'])
