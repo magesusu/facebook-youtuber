@@ -11,10 +11,10 @@ import configparser
 CONFIG_LOCATION = "~/.config/facebook-youtuber/"
 UPLOADED_LIST_LOCATION = CONFIG_LOCATION + "UploadedVideoId.csv"
 
-inifile = configparser.ConfigParser()
-inifile.read(CONFIG_LOCATION + 'config.ini', 'UTF-8')
-ACCESS_TOKEN = inifile.get('facebook_app', 'ACCESS_TOKEN')
-USER_ID = inifile.get('facebook_app', 'USER_ID')
+config = configparser.ConfigParser()
+config.read(CONFIG_LOCATION + 'config.ini', 'UTF-8')
+ACCESS_TOKEN = config['facebook']['ACCESS_TOKEN']
+USER_ID = config['facebook']['USER_ID']
 
 API_VIDEO_LIST_URL = "https://graph.facebook.com/v2.12/" + USER_ID + "/videos?limit=99999999999999&access_token=" + ACCESS_TOKEN
 
